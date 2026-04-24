@@ -52,10 +52,6 @@ section{
     gap: var(--space-md);
 }
 
-section .game-instructions{
-    
-}
-
 section .stats{
     width: 100%;
     display: flex;
