@@ -1,21 +1,21 @@
 export class SnakeBoard {
-
     #BLOCK_WIDTH = 50;
     #BLOCK_HEIGHT = 50;
 
-    constructor(board,scoreElement,highestSocre,timer) {
+    constructor(board, scoreElement, highestScoreElement, timerElement) {
         this.board = board;
         this.scoreElement = scoreElement;
-        this.highestSocre = highestSocre;
-        this.timer = timer;
+        this.highestScoreElement = highestScoreElement;
+        this.timerElement = timerElement;
     }
-    
+
     init() {
         this.snake = [];
         this.snakeDirection = [0, 1];
         this.score = 0;
+
         this.scoreElement.textContent = this.score;
-        this.timer.textContent = "00:00"
+        this.timerElement.textContent = "00:00";
 
         this.snake.push(
             { row: 0, column: 0 },
@@ -31,6 +31,8 @@ export class SnakeBoard {
     }
 
     startGame() {
+        if (this.isGameOn) return;
+        this.isGameOn = true;
         window.addEventListener("keydown", (event) => {
             const [currentRowDir, currentColDir] = this.snakeDirection;
 
@@ -60,21 +62,24 @@ export class SnakeBoard {
                     break;
             }
         });
-        this.gameInterval;
+
         this.startTime = Date.now();
+
         this.timerInterval = setInterval(() => {
             const elapsedMs = Date.now() - this.startTime;
             const totalSeconds = Math.floor(elapsedMs / 1000);
+
             const minutes = Math.floor(totalSeconds / 60);
             const seconds = totalSeconds % 60;
+
             const formattedTime =
                 String(minutes).padStart(2, "0") +
                 ":" +
                 String(seconds).padStart(2, "0");
 
-            this.timer.textContent = "";
-            this.timer.textContent = formattedTime;
+            this.timerElement.textContent = formattedTime;
         }, 1000);
+
         this.gameInterval = setInterval(() => {
             const head = this.snake[this.snake.length - 1];
             const tail = this.snake[0];
@@ -99,7 +104,7 @@ export class SnakeBoard {
                 newColumn < columns;
 
             if (isCollided || !isInBounds) {
-                this.stopGame(this.gameInterval);
+                this.stopGame();
                 return;
             }
 
@@ -122,10 +127,12 @@ export class SnakeBoard {
             });
 
             newCell.classList.add("snake-block");
-        }, 300);
+        }, 250);
     }
 
     stopGame() {
+        if(!this.isGameOn) return;
+        this.isGameOn = false;
         clearInterval(this.timerInterval);
         clearInterval(this.gameInterval);
         this.updateHighestScore();
@@ -150,33 +157,37 @@ export class SnakeBoard {
 
     renderSnakeBlocks() {
         this.snake.forEach(({ row, column }) => {
-            const cell = this.getCell(row,column);
+            const cell = this.getCell(row, column);
             cell.classList.add("snake-block");
         });
     }
 
     renderTargetBlock() {
         const { rows, columns } = this.getBoardDimensions();
+
         this.target = this.getRandomCell(rows, columns);
 
-        const cell = this.getCell(this.target.row,this.target.column);
-
+        const cell = this.getCell(this.target.row, this.target.column);
         cell.classList.add("target-block");
     }
 
-    renderHighestScore(){
-        const hgscore = localStorage.getItem("highestscore");
-        if(hgscore){
-            this.highestSocre.textContent = hgscore;
-        }else{
-            localStorage.setItem("highestscore",0)
-            this.highestSocre.textContent = 0;
+    renderHighestScore() {
+        const highestScore = localStorage.getItem("highestscore");
+
+        if (highestScore) {
+            this.highestScoreElement.textContent = highestScore;
+        } else {
+            localStorage.setItem("highestscore", 0);
+            this.highestScoreElement.textContent = 0;
         }
     }
 
-    updateHighestScore(){
-        const hgscore = localStorage.getItem("highestscore");
-        if(this.score > (hgscore * 1)) localStorage.setItem("highestscore",this.score)
+    updateHighestScore() {
+        const highestScore = localStorage.getItem("highestscore");
+
+        if (this.score > Number(highestScore)) {
+            localStorage.setItem("highestscore", this.score);
+        }
     }
 
     getRandomCell(rows, columns) {
@@ -187,12 +198,8 @@ export class SnakeBoard {
     }
 
     getBoardDimensions() {
-        const columns = Math.floor(
-            this.board.clientWidth / this.#BLOCK_WIDTH
-        );
-        const rows = Math.floor(
-            this.board.clientHeight / this.#BLOCK_HEIGHT
-        );
+        const columns = Math.floor(this.board.clientWidth / this.#BLOCK_WIDTH);
+        const rows = Math.floor(this.board.clientHeight / this.#BLOCK_HEIGHT);
 
         return { rows, columns };
     }
