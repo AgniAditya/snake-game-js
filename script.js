@@ -1,23 +1,13 @@
-const gameBoard = document.querySelector('.board');
+import { SnakeBoard } from "./snakeBoard.js";
 
-const BLOCK_WIDTH = 30;
-const BLOCK_HEIGHT = 30;
+const board = document.querySelector('.board');
+const highestScore = document.querySelector("#highest-score")
+const score = document.querySelector("#score")
+const time = document.querySelector("#time")
 
-function renderBoardGrid() {
-    gameBoard.innerHTML = "";
-
-    const columns = Math.floor(gameBoard.clientWidth / BLOCK_WIDTH);
-    const rows = Math.floor(gameBoard.clientHeight / BLOCK_HEIGHT);
-
-    const totalCells = columns * rows;
-
-    for (let i = 0; i < totalCells; i++) {
-        const cell = document.createElement("div");
-        cell.classList.add("block");
-        gameBoard.appendChild(cell);
-    }
-}
-
-window.addEventListener('resize', renderBoardGrid);
-
-renderBoardGrid();
+const snakeBoard = new SnakeBoard(board,score,highestScore,time)
+snakeBoard.init()
+window.addEventListener("keydown", (event) => {
+    if(event.key === "Enter") snakeBoard.startGame();
+    else if(event.key === "Escape") snakeBoard.stopGame();
+})
