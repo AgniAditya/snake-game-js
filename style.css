@@ -52,6 +52,18 @@ section{
     gap: var(--space-md);
 }
 
+.btn{
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover{
+    transform: scale(1.1);
+}
+
 section .stats{
     width: 100%;
     display: flex;
@@ -77,6 +89,7 @@ section .board{
 
 .block{
     border: 1px solid var(--border-primary-color);
+    border-radius: 50%;
 }
 
 .snake-block{
@@ -85,4 +98,23 @@ section .board{
 
 .target-block{
     background-color: var(--bg-target-block);
+}
+
+.modal{
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background-color: #1c1c1c81;
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal .start-game{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
 }

@@ -4,6 +4,8 @@ const boardElement = document.querySelector(".board");
 const highScoreElement = document.querySelector("#highest-score");
 const scoreElement = document.querySelector("#score");
 const timeElement = document.querySelector("#time");
+const modal = document.querySelector(".modal");
+const startgamebtn = document.querySelector(".btn-start");
 
 const snakeGame = new SnakeBoard(
   boardElement,
@@ -11,10 +13,9 @@ const snakeGame = new SnakeBoard(
   highScoreElement,
   timeElement
 );
-
 snakeGame.init();
 
-window.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") snakeGame.startGame();
-  else if (event.key === "Escape") snakeGame.stopGame();
-});
+startgamebtn.addEventListener('click', () => {
+  modal.style.display = "none";
+  snakeGame.startGame()
+})

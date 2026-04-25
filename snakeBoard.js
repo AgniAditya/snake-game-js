@@ -137,6 +137,32 @@ export class SnakeBoard {
         clearInterval(this.gameInterval);
         this.updateHighestScore();
         this.init();
+        this.renderRestartModal();
+    }
+
+    renderRestartModal(){
+        const modal = document.createElement("div");
+        modal.classList.add("modal");
+
+        const startgame = document.createElement("div");
+        startgame.classList.add("start-game");
+
+        const h2 = document.createElement("h2");
+        h2.textContent = "Restart your game";
+
+        const restartgamebtn = document.createElement('button');
+        restartgamebtn.classList.add("btn")
+        restartgamebtn.textContent = "Restart game"
+        restartgamebtn.addEventListener('click', () => {
+            modal.style.display = "none";
+            this.startGame()
+        })
+
+        startgame.appendChild(h2);
+        startgame.appendChild(restartgamebtn);
+
+        modal.appendChild(startgame);
+        document.querySelector("main").appendChild(modal)
     }
 
     renderBoardGrid() {
